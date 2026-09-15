@@ -1,0 +1,31 @@
+generated: '2026-09-15'
+method: searched
+source: https://docs.icallagent.com/sdk/
+summary: >-
+  No first-party client library is published. The SDK page states Node.js/TypeScript and
+  Python clients are "Planned" but not yet released; until then iCallAgent directs consumers
+  to call the REST API directly with a personal API key (Bearer + JSON). No packages were
+  found on npm, PyPI, RubyGems, crates.io, Packagist, NuGet, Maven Central, or pkg.go.dev.
+official_packages: []
+planned:
+  - language: Node.js / TypeScript
+    status: planned
+    registry: null
+    version: null
+    note: Listed as "Planned" on the SDK page; no package published yet.
+  - language: Python
+    status: planned
+    registry: null
+    version: null
+    note: Listed as "Planned" on the SDK page; no package published yet.
+searches:
+  - registry: npm
+    query: icallagent
+    result: none
+  - registry: pypi
+    query: icallagent
+    result: none
+notes: >-
+  Provider explicitly explains the absence: the public surface (campaigns, agents, phone
+  numbers, contacts, webhooks) is intentionally narrow and an SDK will follow once it covers
+  more of the platform. A first-party SDK does not yet exist to date-check for abandonment.

@@ -1,0 +1,50 @@
+overlay: 1.0.0
+info:
+  title: iCallAgent Public API enrichment overlay
+  version: 1.0.0
+extends: ../openapi/icallagent-public-api-openapi.json
+x-provenance:
+  generated: '2026-09-15'
+  method: generated
+  source: >-
+    Derived from docs.icallagent.com api-reference (authentication, errors, pagination,
+    webhooks) captured 2026-09-15. Non-destructive; the original OpenAPI snapshot is
+    unmodified.
+actions:
+  - target: $.info
+    description: Record the production base and the human documentation URL.
+    update:
+      x-humanURL: https://docs.icallagent.com/api-reference/
+      x-productionBaseURL: https://api.icallagent.com/api/public/v1/
+  - target: $
+    description: >-
+      Document the flat error envelope shared by every operation ({"detail": "..."}),
+      which is not RFC 9457 problem+json.
+    update:
+      x-error-envelope:
+        shape: flat
+        fields:
+          detail: Human-readable error message.
+        rfc9457: false
+  - target: $
+    description: Document the offset/limit pagination shared by all GET list endpoints.
+    update:
+      x-pagination:
+        style: offset-limit
+        params:
+          limit:
+            default: 100
+            max: 200
+          offset:
+            default: 0
+        response_envelope_field: results
+        note: Out-of-range values are clamped, not rejected.
+  - target: $
+    description: Document the outbound call.completed webhook delivered to subscribers.
+    update:
+      x-webhooks:
+        call.completed:
+          delivery: at-least-once
+          dedupe_key: call_id
+          subscribe_operation: subscribeWebhook
+          unsubscribe_operation: unsubscribeWebhook

@@ -1,0 +1,36 @@
+generated: '2026-09-15'
+method: searched
+source: https://docs.icallagent.com/api-reference/errors
+summary: >-
+  Every error response, across every endpoint, uses the same flat JSON body
+  {"detail": "..."} with content-type application/json. This is NOT RFC 9457 problem+json —
+  there is no type/title/status/instance envelope. Semantics are carried by the HTTP status
+  code plus the human-readable detail string.
+format: flat-detail
+rfc9457: false
+envelope:
+  fields:
+    detail: Human-readable message describing what went wrong.
+status_codes:
+  - status: 400
+    meaning: >-
+      Bad request: a missing/invalid field, or an unresolvable reference (e.g. no
+      campaign_id / campaign given, or an unnormalizable phone number).
+  - status: 401
+    meaning: Missing or invalid access token.
+  - status: 404
+    meaning: >-
+      Referenced resource doesn't exist, or belongs to a different workspace — the API
+      returns 404 (never 403) for cross-workspace ids and never confirms existence outside
+      your workspace.
+  - status: 409
+    meaning: >-
+      Conflict: e.g. an ambiguous campaign name match, or the campaign isn't in a state that
+      accepts new contacts.
+  - status: 422
+    meaning: >-
+      Well-formed request rejected by a business rule — most commonly the compliance gate
+      blocking an outbound contact (blacklist, do-not-call, revoked consent).
+notes: >-
+  Derived from the OpenAPI responses (createContact declares 400/404/409/422; createCampaign
+  400/404) and enriched with the docs error reference, which is the authoritative catalog.

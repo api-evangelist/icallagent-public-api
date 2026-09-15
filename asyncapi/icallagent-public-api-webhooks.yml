@@ -1,0 +1,34 @@
+generated: '2026-09-15'
+method: searched
+source: https://docs.icallagent.com/api-reference/webhooks/events
+summary: >-
+  iCallAgent delivers one outbound webhook event, call.completed, to URLs registered via
+  POST /webhooks/subscribe (removed via DELETE /webhooks/{id}/). It is POSTed to every
+  subscribed URL when a call reaches a terminal state. No AsyncAPI document is published; this
+  captures the webhook catalog directly from the docs.
+transport: https-webhook
+delivery: at-least-once
+dedupe_key: call_id
+subscribe_operation: subscribeWebhook
+unsubscribe_operation: unsubscribeWebhook
+events:
+  - name: call.completed
+    trigger: >-
+      Fired once when a call reaches a terminal state (completed, or a final non-retryable
+      failed). A campaign call about to retry does not fire; only its eventual final outcome
+      does. Delivery fires exactly once per call regardless of which code path closed it.
+    payload_fields:
+      event: 'string ("call.completed")'
+      call_id: 'string'
+      status: 'string (only "completed" or "failed")'
+      direction: 'string (e.g. "outbound")'
+      agent: 'object {id, name} or null (null if no linked agent)'
+      contact: 'object {id, name, phone}; never null; falls back to name "<call target label>" and empty phone'
+      campaign: 'object {id, name} or null (null for ad hoc / browser / inbound calls)'
+      answered_at: 'ISO 8601 datetime'
+      ended_at: 'ISO 8601 datetime'
+      duration_seconds: 'integer'
+      hangup_cause: 'string (e.g. "NORMAL_CLEARING")'
+    consumer_guidance: >-
+      Respond quickly with a 2xx. Treat as at-least-once and dedupe on call_id for strict
+      idempotency. Check for an empty contact.phone rather than a missing contact object.

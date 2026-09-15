@@ -1,0 +1,92 @@
+generated: '2026-09-15'
+method: derived
+source: openapi/icallagent-public-api-openapi.json + docs api-reference response examples
+summary: >-
+  Entity graph for the iCallAgent public surface, derived from the request/response schemas
+  and the id-reference fields between them. Ids are integers. The workspace is the implicit
+  tenant boundary — every reference resolves within the caller's workspace (a cross-workspace
+  id returns 404).
+entities:
+  - name: agent
+    id: integer
+    fields: [id, name]
+    note: >-
+      Exposed read-only via GET /agents/ (id + name only, Live agents). Create/edit is done
+      in the dashboard, not the public API. Called "widget" internally (widget_id).
+  - name: campaign
+    id: integer
+    fields:
+      - name
+      - widget_id
+      - caller_id
+      - phone_number_id
+      - status
+      - max_concurrent_calls
+      - retry_attempts
+      - retry_delay_minutes
+      - timezone
+      - start_date
+      - end_date
+      - start_time
+      - end_time
+      - weekdays
+      - excluded_dates
+    note: status one of draft/active/paused/completed/cancelled.
+  - name: contact
+    id: integer
+    fields:
+      - phone
+      - campaign_id
+      - name
+      - email
+      - company
+      - department
+      - notes
+      - consent_status
+      - external_id
+    note: >-
+      external_id is a per-campaign idempotency key. A contact is queued into a campaign on
+      create.
+  - name: phone_number
+    id: integer
+    fields: [id]
+    note: Listed via GET /phone-numbers/; referenced by campaign.phone_number_id for caller ID.
+  - name: webhook_subscription
+    id: integer
+    fields: [id, url]
+    note: Subscribes a callback URL to the call.completed event.
+  - name: call
+    id: string
+    fields: [call_id, status, direction, agent, contact, campaign, answered_at, ended_at, duration_seconds, hangup_cause]
+    note: >-
+      Not directly CRUD-able in the public API; surfaced through the call.completed webhook
+      payload. call_id is a string (e.g. "abc123").
+relationships:
+  - from: campaign
+    to: agent
+    type: belongs_to
+    via: widget_id
+  - from: campaign
+    to: phone_number
+    type: belongs_to
+    via: phone_number_id
+  - from: contact
+    to: campaign
+    type: belongs_to
+    via: campaign_id (or campaign name)
+  - from: call
+    to: agent
+    type: belongs_to
+    via: agent.id
+  - from: call
+    to: contact
+    type: belongs_to
+    via: contact.id
+  - from: call
+    to: campaign
+    type: belongs_to
+    via: campaign.id
+  - from: webhook_subscription
+    to: call
+    type: observes
+    via: call.completed event

@@ -1,0 +1,78 @@
+generated: '2026-09-15'
+method: searched
+source: >-
+  https://docs.icallagent.com/api-reference/ (authentication, errors, pagination, webhooks)
+  + openapi/icallagent-public-api-openapi.json
+summary: >-
+  Cross-cutting runtime semantics for the iCallAgent public REST API: Bearer auth, offset/
+  limit pagination, a flat error envelope, url-path versioning, and an at-least-once webhook
+  with client-side dedupe. There is no server-side idempotency key and no dry-run mode.
+auth:
+  style: bearer
+  header: Authorization
+  value: Bearer <token>
+  token_types: [personal-api-key (ic_live_ prefix, no scopes), oauth2-access-token]
+  note: Personal keys carry no scopes and can call every endpoint against their workspace.
+pagination:
+  style: offset-limit
+  params:
+    limit: { default: 100, max: 200 }
+    offset: { default: 0 }
+  response_field: results
+  ordering: by id, after filters
+  clamping: Out-of-range values are clamped rather than rejected.
+versioning:
+  style: url-path
+  current: v1
+error_envelope:
+  shape: flat
+  fields: { detail: human-readable message }
+  rfc9457: false
+  semantics_by: http-status-code
+rate_limit_signaling:
+  documented: false
+  headers: none
+  note: No X-RateLimit-*/RateLimit-*/Retry-After headers documented.
+request_id:
+  documented: false
+metadata:
+  documented: false
+expansion:
+  documented: false
+idempotency:
+  mechanism: request-key
+  key_field: external_id
+  key_location: request-body
+  coverage: partial
+  scope: [createContact]
+  note: >-
+    createContact accepts an `external_id` documented as an "Idempotency key, scoped to the
+    campaign": replaying the same external_id returns the original call with HTTP 200 instead
+    of creating a duplicate (hence createContact returns 200 OR 201). The key is a body field,
+    not an Idempotency-Key header, and it is scoped to createContact only — createCampaign and
+    subscribeWebhook have no replay protection, so coverage is partial. Separately, the
+    call.completed webhook is at-least-once and consumers are told to dedupe on call_id
+    (consumer-side, not a provider write guard).
+reversibility:
+  grade: documented
+  writes:
+    - operation: subscribeWebhook
+      reversal: unsubscribeWebhook
+      reversal_operationId: unsubscribeWebhook
+      window: none-stated
+      note: A webhook subscription can be removed with DELETE /webhooks/{id}/.
+      docs: https://docs.icallagent.com/api-reference/webhooks/unsubscribe
+    - operation: createCampaign
+      reversal: none-public
+      window: na
+      note: No public delete/cancel operation for a campaign in the v1 surface.
+    - operation: createContact
+      reversal: none-public
+      window: na
+      note: >-
+        No public delete/dequeue operation for a queued contact; the compliance gate (422)
+        is a pre-write guard, not a reversal.
+  note: >-
+    Only the webhook subscribe/unsubscribe pair is reversible, and no time window is stated,
+    so the write surface grades `documented` rather than `verified`. NEVER assert a window
+    the docs do not state.

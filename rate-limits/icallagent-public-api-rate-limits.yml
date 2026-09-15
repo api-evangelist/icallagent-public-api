@@ -1,0 +1,27 @@
+generated: '2026-09-15'
+method: searched
+source: >-
+  https://docs.icallagent.com/api-reference/errors +
+  https://docs.icallagent.com/api-reference/pagination
+summary: >-
+  No API rate limits are documented. The errors reference lists 400/401/404/409/422 with no
+  429, and no X-RateLimit-*/RateLimit-*/Retry-After response headers are described anywhere in
+  the reference. The platform's real throughput constraint is expressed as call CONCURRENCY
+  (concurrent call lines, sold in add-on packs) and per-campaign max_concurrent_calls, not as
+  HTTP request-rate limits.
+limit_count: 0
+headers: none
+status_on_exhaustion: null
+related_throttles:
+  - name: campaign max_concurrent_calls
+    scope: per-campaign
+    note: >-
+      A campaign's max_concurrent_calls is silently clamped to the account's concurrency
+      entitlement (never a 400); the response returns the value actually applied. This bounds
+      outbound calling, not API request rate.
+  - name: pagination limit
+    scope: per-request
+    note: limit is clamped to a max of 200 rows per list request.
+notes: >-
+  An honest zero: no documented HTTP rate limit. If one exists it is undocumented and would
+  need to be observed on authenticated traffic (not probed here).

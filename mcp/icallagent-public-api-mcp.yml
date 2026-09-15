@@ -1,0 +1,51 @@
+generated: '2026-09-15'
+method: derived
+source: openapi/icallagent-public-api-openapi.json + https://docs.icallagent.com/mcp/
+name: iCallAgent Public API (candidate MCP)
+summary: >-
+  iCallAgent operates an MCP server, but it is NOT a public agent surface. It exists to
+  serve the iCallAgent agent RUNTIME during live calls (knowledge-base search, CRM actions,
+  integrations) over SSE at GET /api/mcp/sse and POST /api/mcp/messages/, and requires a
+  widget_id plus a runtime-issued `token` secret to open a session (an anonymous tools/list
+  returns HTTP 400 "session_id is required"). Its docs state plainly it is "not designed as
+  a general-purpose endpoint for third-party MCP clients like Claude Desktop or Cursor", and
+  the tool set is per-agent and dynamic. It is therefore not cataloged as a reachable remote
+  MCP server. Below is a CANDIDATE tool list derived from the public REST operations, for
+  reference only — no such server is published.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  note: >-
+    An internal, session-gated SSE MCP server exists at api.icallagent.com/api/mcp/ but is
+    scoped to the call runtime and not meant for external MCP clients; anonymous tools/list
+    returns 400 (session_id required). No installable or openly reachable MCP product ships.
+status: candidate
+tools:
+  - name: list_agents
+    rest: [listAgents]
+    description: List Live voice agents (id + name) in the workspace.
+  - name: list_campaigns
+    rest: [listCampaigns]
+    description: List outbound call campaigns.
+  - name: create_campaign
+    rest: [createCampaign]
+    description: Create an outbound call campaign bound to an agent.
+  - name: search_contacts
+    rest: [searchContacts]
+    description: Search contacts in the workspace.
+  - name: create_contact
+    rest: [createContact]
+    description: Create a contact and queue a call into a campaign.
+  - name: list_phone_numbers
+    rest: [listPhoneNumbers]
+    description: List phone numbers available for outbound caller ID.
+  - name: subscribe_webhook
+    rest: [subscribeWebhook]
+    description: Subscribe a callback URL to the call.completed event.
+  - name: unsubscribe_webhook
+    rest: [unsubscribeWebhook]
+    description: Remove a webhook subscription.

@@ -1,0 +1,57 @@
+generated: '2026-09-15'
+method: probed
+source: probe of /.well-known/ and discovery paths across every known host
+summary: >-
+  No machine-readable discovery documents are served. The api host (api.icallagent.com)
+  returns real 404s for every /.well-known/ path. The marketing host (icallagent.com) is a
+  single-page-app catch-all that answers 200 with the same 1789-byte HTML shell for EVERY
+  path — including /.well-known/security.txt, /.well-known/ai-plugin.json and
+  /.well-known/agent-card.json — so those 200s are SPA false positives, not documents. No
+  WellKnown or SecurityTxt pointer is emitted.
+hosts:
+  - host: api.icallagent.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+  - host: docs.icallagent.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /llms.txt
+        status: 404
+        file: null
+  - host: icallagent.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        file: null
+        note: SPA shell (1789-byte HTML), not a real document — treated as a miss.
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        file: null
+        note: SPA shell, not JSON — treated as a miss.
+      - path: /.well-known/agent-card.json
+        status: 200
+        file: null
+        note: SPA shell, not an AgentCard — treated as a miss.
+      - path: /llms.txt
+        status: 200
+        file: null
+        note: SPA shell, not an llms.txt — treated as a miss.

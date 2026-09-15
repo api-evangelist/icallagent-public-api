@@ -1,0 +1,33 @@
+generated: '2026-09-15'
+method: searched
+source: openapi/icallagent-public-api-openapi.json
+docs: https://docs.icallagent.com/api-reference/authentication
+schemes:
+- name: oauth2
+  source: openapi/icallagent-public-api-openapi.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize/
+    tokenUrl: /oauth/token/
+  description: OAuth2 access token from the consent flow third-party apps go through (see /oauth/authorize/).
+    Interchangeable with a personal API key on every operation below — both are sent as a Bearer
+    token in the same header.
+scopes:
+- scope: campaigns:read
+  description: List your call campaigns
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/icallagent-public-api-openapi.json
+- scope: campaigns:write
+  description: Create new call campaigns
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/icallagent-public-api-openapi.json
+- scope: contacts:write
+  description: Create contacts and queue calls into your campaigns
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/icallagent-public-api-openapi.json

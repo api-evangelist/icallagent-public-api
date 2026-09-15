@@ -1,0 +1,15 @@
+generated: '2026-09-15'
+method: generated
+source: openapi/icallagent-public-api-openapi.json + docs.icallagent.com api-reference
+api: iCallAgent Public API
+summary: >-
+  Packaged Agent Skills for the iCallAgent public REST API, each grounded in real
+  operationIds from the OpenAPI contract and the documented conventions (Bearer auth,
+  flat {"detail"} errors, offset/limit pagination, per-campaign external_id idempotency).
+skills:
+  - file: icallagent-public-api-launch-outbound-campaign.md
+    name: Launch an outbound calling campaign
+    operations: [listAgents, listPhoneNumbers, createCampaign, createContact]
+  - file: icallagent-public-api-subscribe-call-outcomes.md
+    name: Subscribe to call outcomes
+    operations: [subscribeWebhook, unsubscribeWebhook]

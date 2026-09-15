@@ -1,0 +1,43 @@
+generated: '2026-09-15'
+method: searched
+source: https://icallagent.com/pricing
+summary: >-
+  iCallAgent is pay-as-you-go: no subscription tiers, no lock-in. You add funds to a balance
+  and pay per connected call minute, priced by whichever transport, STT, LLM and TTS models
+  the agent runs, plus a monthly container-hosting/concurrency charge. Two published options:
+  a self-serve Growth plan and a Custom (contact sales) plan.
+currency: USD
+billing: pay-as-you-go (prepaid balance) + monthly hosting
+plan_count: 2
+plans:
+  - name: Growth
+    price: 0
+    price_unit: /mo base
+    model: pay-as-you-go
+    self_serve: true
+    included:
+      - 1 concurrent call line included free
+      - 100 free trial minutes on signup, no card required
+      - 1 workspace included
+      - Balance never expires, no monthly minimums
+    usage:
+      call_minutes: Billed per connected minute at a blended rate of the chosen STT+LLM+TTS models (example blended rate ~$0.0130/min).
+      hosting: Container hosting for call concurrency (example $50.00/mo for a hosting/concurrency pack).
+      extra_workspace: $20/mo per additional workspace.
+      concurrency: Scale with add-on packs any time.
+    note: Model-provider (STT/LLM/TTS) and carrier transport costs are itemized separately in the live cost calculator.
+  - name: Custom
+    price: null
+    price_unit: contact sales
+    model: negotiated
+    self_serve: false
+    included:
+      - Dedicated instances & custom SLA
+      - Volume discounts on usage rate
+      - Security review & DPA support
+      - Custom onboarding & migration planning
+      - Custom multi-workspace setup
+      - Unlimited concurrency scaling
+notes: >-
+  Pricing is genuinely usage-metered; there is a live cost calculator on the pricing page
+  that computes a blended per-minute rate from the selected transport/STT/LLM/TTS models.

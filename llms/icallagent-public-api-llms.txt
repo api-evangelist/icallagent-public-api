@@ -1,0 +1,36 @@
+# iCallAgent Public API
+
+> Partner REST API for iCallAgent, a platform for building and operating AI voice agents that hold real-time phone/web conversations via an ASR-LLM-TTS pipeline. The public API lets third-party apps act on a user's workspace: managing agents, outbound campaigns, contacts, phone numbers, and webhook subscriptions.
+
+Base URL: https://api.icallagent.com/api/public/v1/
+Auth: `Authorization: Bearer <token>` — a personal API key (prefix `ic_live_`, no scopes, full workspace access) or an OAuth2 access token (authorization-code flow, scopes campaigns:read / campaigns:write / contacts:write). Both are sent as a Bearer token in the same header.
+Errors: flat JSON `{"detail": "..."}` on every error (not RFC 9457). Status codes: 400, 401, 404 (also used for cross-workspace resources), 409, 422 (compliance gate).
+Pagination: offset/limit on list endpoints; `limit` default 100, max 200; `offset` default 0; response wraps rows in `results[]`.
+
+## API Reference
+- [API reference index](https://docs.icallagent.com/api-reference/)
+- [Authentication](https://docs.icallagent.com/api-reference/authentication): personal API keys and OAuth2 for third-party apps.
+- [Errors](https://docs.icallagent.com/api-reference/errors): error envelope and status codes.
+- [Pagination](https://docs.icallagent.com/api-reference/pagination): offset/limit.
+- [Webhooks: events](https://docs.icallagent.com/api-reference/webhooks/events): the call.completed payload.
+
+## Operations
+- GET /agents/ (listAgents): list Live voice agents (id + name only).
+- GET /campaigns/ (listCampaigns): list outbound call campaigns.
+- POST /campaigns/ (createCampaign): create a campaign bound to an agent (widget_id required).
+- GET /contacts/ (searchContacts): search contacts.
+- POST /contacts/ (createContact): create a contact and queue a call into a campaign; may return 422 when the compliance gate blocks the number.
+- GET /phone-numbers/ (listPhoneNumbers): list phone numbers for outbound caller ID.
+- POST /webhooks/subscribe (subscribeWebhook): subscribe a callback URL to call.completed.
+- DELETE /webhooks/{id}/ (unsubscribeWebhook): remove a webhook subscription.
+
+## Guides
+- [Outbound campaigns](https://docs.icallagent.com/api-reference/campaigns/create)
+- [Tools guide](https://docs.icallagent.com/guides/tools)
+- [Make.com integration](https://docs.icallagent.com/integrations/make)
+- [Pricing](https://icallagent.com/pricing): pay-as-you-go by call minute; Growth ($0/mo base, 100 free trial minutes) and Custom.
+
+## Notes
+- No published SDK yet (Node.js/TypeScript and Python are planned).
+- An internal MCP server exists for the call runtime only and is not open to third-party MCP clients.
+- No llms.txt is currently served by the provider; this file was generated from the OpenAPI contract and public docs.

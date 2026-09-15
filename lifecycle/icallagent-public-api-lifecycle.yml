@@ -1,0 +1,32 @@
+generated: '2026-09-15'
+method: searched
+source: >-
+  https://docs.icallagent.com/api-reference/ + https://docs.icallagent.com/sdk/ (versioning
+  and surface-stability statements); host probes for status/changelog
+summary: >-
+  The public API is explicitly versioned at v1 in the URL path (/api/public/v1/). iCallAgent
+  describes the surface as intentionally narrow but stable in authentication and versioning,
+  with more of the platform (agent management, knowledge base, calls) to be added over time.
+  No deprecation policy, Sunset/Deprecation header convention, SLA, dated changelog, or
+  public status page was found.
+versioning:
+  scheme: url-path
+  current: v1
+  base: https://api.icallagent.com/api/public/v1/
+  evidence: docs api-reference; server url in OpenAPI.
+deprecation:
+  policy: none-published
+  headers: none
+  deprecated_operations: []
+  evidence: No RFC 8594 Sunset/Deprecation headers and no deprecation policy documented.
+status_page:
+  url: null
+  evidence: status.icallagent.com did not resolve (connection failed, no host).
+changelog:
+  url: null
+  evidence: >-
+    docs.icallagent.com/changelog returns 404; icallagent.com/changelog answers 200 but is
+    the SPA catch-all shell, not a changelog.
+sla:
+  published: false
+  note: Custom plan mentions a "custom SLA" for enterprise; no public SLA document.

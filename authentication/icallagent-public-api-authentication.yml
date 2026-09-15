@@ -1,0 +1,31 @@
+generated: '2026-09-15'
+method: searched
+source: openapi/icallagent-public-api-openapi.json
+docs: https://docs.icallagent.com/api-reference/authentication
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: ApiKeyAuth
+  type: http
+  scheme: bearer
+  bearerFormat: ic_live_<token>
+  description: 'Personal API key from Settings → API Keys. Code samples show `Authorization:
+    Bearer <token>` — replace `<token>` with your key (include the word Bearer).'
+  sources:
+  - openapi/icallagent-public-api-openapi.json
+- name: oauth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /oauth/authorize/
+    tokenUrl: /oauth/token/
+    scopes: 3
+  description: OAuth2 access token from the consent flow third-party apps go through (see /oauth/authorize/).
+    Interchangeable with a personal API key on every operation below — both are sent as a Bearer
+    token in the same header.
+  sources:
+  - openapi/icallagent-public-api-openapi.json

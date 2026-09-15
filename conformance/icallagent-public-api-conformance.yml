@@ -1,0 +1,36 @@
+generated: '2026-09-15'
+method: derived
+source: >-
+  openapi/icallagent-public-api-openapi.json + docs.icallagent.com api-reference
+  (authentication, errors, pagination)
+summary: >-
+  OAuth2 authorization-code is declared in the contract (with PKCE for public clients per the
+  docs). The error model is a flat {"detail": ...} envelope, explicitly NOT RFC 9457
+  problem+json. Pagination is offset/limit. No industry domain standard applies to a
+  general voice-AI/CPaaS partner API, so none is asserted (reward-only).
+conformance:
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      components.securitySchemes.oauth2 (authorizationCode flow, authorizationUrl
+      /oauth/authorize/, tokenUrl /oauth/token/) in the OpenAPI; docs authentication page
+      documents PKCE for public clients.
+  - id: oidc
+    conforms: false
+    evidence: No openIdConnect scheme and no /.well-known/openid-configuration (404 on api host).
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors use a flat {"detail": "..."} body with application/json, not
+      application/problem+json — docs errors page states this shape across every endpoint.
+  - id: pagination
+    conforms: true
+    evidence: >-
+      Offset/limit on all GET list endpoints (limit default 100 / max 200, offset default 0),
+      rows wrapped in results[] — docs pagination page.
+  - id: idempotency
+    conforms: true
+    evidence: >-
+      Partial: createContact accepts an `external_id` idempotency key (scoped to the campaign);
+      replaying it returns the original call with HTTP 200 instead of a duplicate. Scoped to
+      createContact only — createCampaign and subscribeWebhook have no replay protection.
