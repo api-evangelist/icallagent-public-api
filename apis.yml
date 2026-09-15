@@ -1,0 +1,51 @@
+name: iCallAgent Public API
+description: >-
+  Partner REST API for iCallAgent, a platform for building and operating AI voice agents that hold real-time phone/web
+  conversations via an ASR-LLM-TTS pipeline. The API lets third-party apps act on a user's workspace: managing agents,
+  outbound campaigns, contacts, phone numbers, and webhooks.
+url: https://raw.githubusercontent.com/api-evangelist/icallagent-public-api/refs/heads/main/apis.yml
+created: '2026-09-15'
+modified: '2026-09-15'
+specificationVersion: '0.21'
+tags:
+  - voice ai
+  - voice ai assistant
+  - conversational ai
+  - voice agents
+  - telephony / CPaaS
+  - contact center / CCaaS
+  - outbound calling
+  - speech (ASR/TTS)
+  - agent tools / MCP
+apis:
+  - name: iCallAgent Public API
+    description: >-
+      Documented, versioned REST API for managing AI voice agents, outbound campaigns, contacts, phone numbers, and
+      webhook subscriptions. Authenticated via personal API key (ic_live_) or OAuth2 bearer tokens.
+    humanURL: https://docs.icallagent.com/api-reference/
+    baseURL: https://api.icallagent.com/api/public/v1/
+    tags:
+      - voice ai
+      - voice ai assistant
+      - conversational ai
+      - voice agents
+      - telephony / CPaaS
+      - contact center / CCaaS
+      - outbound calling
+      - speech (ASR/TTS)
+      - agent tools / MCP
+    properties:
+      - type: OpenAPI
+        url: https://docs.icallagent.com/openapi.json
+      - type: Documentation
+        url: https://docs.icallagent.com/api-reference/
+      - type: Documentation
+        url: https://docs.icallagent.com/api-reference/authentication
+maintainers:
+  - FN: iCallAgent
+    url: https://github.com/icallagent
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 95
+  at: '2026-09-15T18:32:20.296Z'
