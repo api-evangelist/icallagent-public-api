@@ -7,6 +7,16 @@ created: '2026-09-15'
 modified: '2026-09-15'
 specificationVersion: '0.21'
 tags:
+- Voice AI
+- voice ai assistant
+- Conversational AI
+- Voice Agents
+- telephony / CPaaS
+- contact center / CCaaS
+- Outbound Calling
+- speech (ASR/TTS)
+- agent tools / MCP
+tags_raw:
 - voice ai
 - voice ai assistant
 - conversational ai
@@ -17,27 +27,16 @@ tags:
 - speech (ASR/TTS)
 - agent tools / MCP
 apis:
-- name: iCallAgent Public API
-  description: Documented, versioned REST API for managing AI voice agents, outbound campaigns, contacts, phone numbers, and
-    webhook subscriptions. Authenticated via personal API key (ic_live_) or OAuth2 bearer tokens.
+- aid: icallagent-public-api:icallagent-public-api-agents-api
+  name: iCallAgent Public API Agents API
+  description: The agents API from iCallAgent Public API — 1 operation(s) for agents.
   humanURL: https://docs.icallagent.com/api-reference/
   baseURL: https://api.icallagent.com/api/public/v1/
   tags:
-  - voice ai
-  - voice ai assistant
-  - conversational ai
-  - voice agents
-  - telephony / CPaaS
-  - contact center / CCaaS
-  - outbound calling
-  - speech (ASR/TTS)
-  - agent tools / MCP
+  - agents
   properties:
   - type: OpenAPI
-    url: openapi/icallagent-public-api-openapi.json
-  - type: OpenAPI
-    name: iCallAgent Public API (provider-hosted)
-    url: https://docs.icallagent.com/openapi.json
+    url: openapi/icallagent-public-api-agents-api-openapi.yml
   - type: Documentation
     url: https://docs.icallagent.com/api-reference/
   - type: Documentation
@@ -48,8 +47,6 @@ apis:
     url: scopes/icallagent-public-api-scopes.yml
   - type: Webhooks
     url: asyncapi/icallagent-public-api-webhooks.yml
-  - type: MCPServer
-    url: mcp/icallagent-public-api-mcp.yml
   - type: RateLimits
     url: rate-limits/icallagent-public-api-rate-limits.yml
   - type: Plans
@@ -64,12 +61,160 @@ apis:
     url: conventions/icallagent-public-api-conventions.yml
   - type: DataModel
     url: data-model/icallagent-public-api-data-model.yml
-  - type: Overlay
-    url: overlays/icallagent-public-api-openapi-overlay.yaml
   - type: Conformance
     url: conformance/icallagent-public-api-conformance.yml
-  - type: AgentSkill
-    url: skills/_index.yml
+  - type: APIReference
+    url: https://docs.icallagent.com/api-reference/
+- aid: icallagent-public-api:icallagent-public-api-campaigns-api
+  name: iCallAgent Public API Campaigns API
+  description: The campaigns API from iCallAgent Public API — 1 operation(s) for campaigns.
+  humanURL: https://docs.icallagent.com/api-reference/
+  baseURL: https://api.icallagent.com/api/public/v1/
+  tags:
+  - campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/icallagent-public-api-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/authentication
+  - type: Authentication
+    url: authentication/icallagent-public-api-authentication.yml
+  - type: OAuthScopes
+    url: scopes/icallagent-public-api-scopes.yml
+  - type: Webhooks
+    url: asyncapi/icallagent-public-api-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/icallagent-public-api-rate-limits.yml
+  - type: Plans
+    url: plans/icallagent-public-api-plans-pricing.yml
+  - type: ErrorCatalog
+    url: errors/icallagent-public-api-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/icallagent-public-api-lifecycle.yml
+  - type: Conventions
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: Idempotency
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: DataModel
+    url: data-model/icallagent-public-api-data-model.yml
+  - type: Conformance
+    url: conformance/icallagent-public-api-conformance.yml
+  - type: APIReference
+    url: https://docs.icallagent.com/api-reference/
+- aid: icallagent-public-api:icallagent-public-api-contacts-api
+  name: iCallAgent Public API Contacts API
+  description: The contacts API from iCallAgent Public API — 1 operation(s) for contacts.
+  humanURL: https://docs.icallagent.com/api-reference/
+  baseURL: https://api.icallagent.com/api/public/v1/
+  tags:
+  - contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/icallagent-public-api-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/authentication
+  - type: Authentication
+    url: authentication/icallagent-public-api-authentication.yml
+  - type: OAuthScopes
+    url: scopes/icallagent-public-api-scopes.yml
+  - type: Webhooks
+    url: asyncapi/icallagent-public-api-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/icallagent-public-api-rate-limits.yml
+  - type: Plans
+    url: plans/icallagent-public-api-plans-pricing.yml
+  - type: ErrorCatalog
+    url: errors/icallagent-public-api-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/icallagent-public-api-lifecycle.yml
+  - type: Conventions
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: Idempotency
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: DataModel
+    url: data-model/icallagent-public-api-data-model.yml
+  - type: Conformance
+    url: conformance/icallagent-public-api-conformance.yml
+  - type: APIReference
+    url: https://docs.icallagent.com/api-reference/
+- aid: icallagent-public-api:icallagent-public-api-phone-numbers-api
+  name: iCallAgent Public API Phone Numbers API
+  description: The phone-numbers API from iCallAgent Public API — 1 operation(s) for phone-numbers.
+  humanURL: https://docs.icallagent.com/api-reference/
+  baseURL: https://api.icallagent.com/api/public/v1/
+  tags:
+  - phone-numbers
+  properties:
+  - type: OpenAPI
+    url: openapi/icallagent-public-api-phone-numbers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/authentication
+  - type: Authentication
+    url: authentication/icallagent-public-api-authentication.yml
+  - type: OAuthScopes
+    url: scopes/icallagent-public-api-scopes.yml
+  - type: Webhooks
+    url: asyncapi/icallagent-public-api-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/icallagent-public-api-rate-limits.yml
+  - type: Plans
+    url: plans/icallagent-public-api-plans-pricing.yml
+  - type: ErrorCatalog
+    url: errors/icallagent-public-api-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/icallagent-public-api-lifecycle.yml
+  - type: Conventions
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: Idempotency
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: DataModel
+    url: data-model/icallagent-public-api-data-model.yml
+  - type: Conformance
+    url: conformance/icallagent-public-api-conformance.yml
+  - type: APIReference
+    url: https://docs.icallagent.com/api-reference/
+- aid: icallagent-public-api:icallagent-public-api-webhooks-api
+  name: iCallAgent Public API Webhooks API
+  description: The webhooks API from iCallAgent Public API — 2 operation(s) for webhooks.
+  humanURL: https://docs.icallagent.com/api-reference/
+  baseURL: https://api.icallagent.com/api/public/v1/
+  tags:
+  - webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/icallagent-public-api-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/
+  - type: Documentation
+    url: https://docs.icallagent.com/api-reference/authentication
+  - type: Authentication
+    url: authentication/icallagent-public-api-authentication.yml
+  - type: OAuthScopes
+    url: scopes/icallagent-public-api-scopes.yml
+  - type: Webhooks
+    url: asyncapi/icallagent-public-api-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/icallagent-public-api-rate-limits.yml
+  - type: Plans
+    url: plans/icallagent-public-api-plans-pricing.yml
+  - type: ErrorCatalog
+    url: errors/icallagent-public-api-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/icallagent-public-api-lifecycle.yml
+  - type: Conventions
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: Idempotency
+    url: conventions/icallagent-public-api-conventions.yml
+  - type: DataModel
+    url: data-model/icallagent-public-api-data-model.yml
+  - type: Conformance
+    url: conformance/icallagent-public-api-conformance.yml
   - type: APIReference
     url: https://docs.icallagent.com/api-reference/
 maintainers:
@@ -81,6 +226,12 @@ generated:
   confidence: 95
   at: '2026-09-15T18:32:20.296Z'
 common:
+- type: MCPServer
+  url: mcp/icallagent-public-api-mcp.yml
+- type: Overlay
+  url: overlays/icallagent-public-api-openapi-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
   url: https://icallagent.com
 - type: DomainSecurity
