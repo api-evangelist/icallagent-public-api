@@ -1,0 +1,112 @@
+openapi: 3.2.0
+info:
+  title: iCallAgent Public Webhooks API
+  version: '1'
+servers:
+- url: http://127.0.0.1:8000/api/public/v1
+  description: Local development
+- url: https://api.icallagent.com/api/public/v1
+  description: Production
+tags:
+- name: Webhooks
+paths:
+  /webhooks/{id}/:
+    delete:
+      operationId: unsubscribeWebhook
+      description: 'Deletes the webhook subscription created by Subscribe. Deleting an id that''s already gone, or that belongs to another workspace, is a no-op **204** — not an error. Detach is safe to call more than once.
+
+
+        **Playground:** fill the path variable `id` with the integer returned by `POST /webhooks/subscribe` (field `id` in the JSON body). Leave it empty and the client will call the literal path `/webhooks/{id}/`, which returns Django''s HTML 404 — that is not a missing subscription.'
+      summary: Unsubscribe a webhook
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: 'Subscription id from Subscribe (`POST /webhooks/subscribe` response `id`). Example: `1`. Must be a number — do not leave this blank in Try it.'
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - ApiKeyAuth: []
+      - oauth2: []
+      responses:
+        '204':
+          description: Deleted, or already gone — always 204.
+  /webhooks/subscribe:
+    post:
+      operationId: subscribeWebhook
+      description: Called once when a user adds the "Watch Completed Calls" instant trigger to a Make scenario. Store the returned `id` — it's what you send back to the unsubscribe endpoint when the trigger is removed.
+      summary: Subscribe a webhook
+      tags:
+      - Webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscribeRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      - oauth2: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Subscription id. Store it and pass it as the path `id` on `DELETE /webhooks/{id}/` to unsubscribe.
+                required:
+                - id
+              examples:
+                Created:
+                  value:
+                    id: 58
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Human-readable error message. Same shape on all public API errors.
+              examples:
+                MissingUrl:
+                  value:
+                    detail: url is required.
+                  summary: Missing url
+          description: ''
+components:
+  schemas:
+    WebhookSubscribeRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Callback URL Make substitutes its own generated address here.
+      required:
+      - url
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: ic_live_<token>
+      description: 'Personal API key from Settings → API Keys. Code samples show `Authorization: Bearer <token>` — replace `<token>` with your key (include the word Bearer).'
+    oauth2:
+      type: oauth2
+      description: OAuth2 access token from the consent flow third-party apps go through (see /oauth/authorize/). Interchangeable with a personal API key on every operation below — both are sent as a Bearer token in the same header.
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            campaigns:read: List your call campaigns
+            campaigns:write: Create new call campaigns
+            contacts:write: Create contacts and queue calls into your campaigns
+x-snapshot-note: SNAPSHOT — do not hand-edit. Regenerate with `npm run api:sync`, which fetches /api/public/v1/schema/ from the backend. It is committed so Vercel builds are reproducible and do not depend on the backend being reachable.

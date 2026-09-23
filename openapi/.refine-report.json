@@ -1,0 +1,33 @@
+{
+  "provider": "icallagent-public-api",
+  "sources": [
+    "_original/icallagent-public-api-openapi.json"
+  ],
+  "outputs": [
+    "icallagent-public-api-agents-api-openapi.yml",
+    "icallagent-public-api-campaigns-api-openapi.yml",
+    "icallagent-public-api-contacts-api-openapi.yml",
+    "icallagent-public-api-phone-numbers-api-openapi.yml",
+    "icallagent-public-api-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "icallagent-public-api-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "icallagent-public-api-openapi.json: declared missing tag: agents",
+    "icallagent-public-api-openapi.json: declared missing tag: campaigns",
+    "icallagent-public-api-openapi.json: declared missing tag: contacts",
+    "icallagent-public-api-openapi.json: declared missing tag: phone-numbers",
+    "icallagent-public-api-openapi.json: declared missing tag: webhooks",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "icallagent-public-api-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "icallagent-public-api-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "icallagent-public-api-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "icallagent-public-api-phone-numbers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "icallagent-public-api-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

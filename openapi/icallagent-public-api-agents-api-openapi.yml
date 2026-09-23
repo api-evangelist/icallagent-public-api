@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: iCallAgent Public Agents API
+  version: '1'
+servers:
+- url: http://127.0.0.1:8000/api/public/v1
+  description: Local development
+- url: https://api.icallagent.com/api/public/v1
+  description: Production
+tags:
+- name: Agents
+paths:
+  /agents/:
+    get:
+      operationId: listAgents
+      description: Only `Live` agents are returned — a `Paused` agent has no working phone/telephony config to place calls with, so it's excluded rather than returned with a status field to filter on client-side.
+      summary: List agents
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: Max results to return. Default 100, clamped to [1, 200] — out-of-range values are silently clamped, not rejected.
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: Number of results to skip. Default 0. Negative values are clamped to 0.
+      tags:
+      - Agents
+      security:
+      - ApiKeyAuth: []
+      - oauth2: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: Page of Live agents (id + name only).
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Agent id. Pass this as `widget_id` when creating a campaign.
+                        name:
+                          type: string
+                          description: Display name of the Live agent.
+              examples:
+                OK:
+                  value:
+                    results:
+                    - id: 7
+                      name: Support Agent
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Human-readable error message. Same shape on all public API errors.
+              examples:
+                NoWorkspace:
+                  value:
+                    detail: No workspace is connected for this application. Reconnect and select a workspace.
+                  summary: No workspace
+          description: No workspace resolved for this caller (OAuth2 app not connected to a workspace, or the API key's workspace no longer exists).
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: ic_live_<token>
+      description: 'Personal API key from Settings → API Keys. Code samples show `Authorization: Bearer <token>` — replace `<token>` with your key (include the word Bearer).'
+    oauth2:
+      type: oauth2
+      description: OAuth2 access token from the consent flow third-party apps go through (see /oauth/authorize/). Interchangeable with a personal API key on every operation below — both are sent as a Bearer token in the same header.
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            campaigns:read: List your call campaigns
+            campaigns:write: Create new call campaigns
+            contacts:write: Create contacts and queue calls into your campaigns
+x-snapshot-note: SNAPSHOT — do not hand-edit. Regenerate with `npm run api:sync`, which fetches /api/public/v1/schema/ from the backend. It is committed so Vercel builds are reproducible and do not depend on the backend being reachable.

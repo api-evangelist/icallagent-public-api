@@ -1,0 +1,279 @@
+openapi: 3.2.0
+info:
+  title: iCallAgent Public Campaigns API
+  version: '1'
+servers:
+- url: http://127.0.0.1:8000/api/public/v1
+  description: Local development
+- url: https://api.icallagent.com/api/public/v1
+  description: Production
+tags:
+- name: Campaigns
+paths:
+  /campaigns/:
+    get:
+      operationId: listCampaigns
+      description: '`status` accepts a single value or a comma-separated list (e.g. `draft,active`). Invalid values are silently dropped rather than rejected — if none of the given values are valid, the filter is dropped entirely and all campaigns are returned.'
+      summary: List campaigns
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: Max results to return. Default 100, clamped to [1, 200] — out-of-range values are silently clamped, not rejected.
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: Number of results to skip. Default 0. Negative values are clamped to 0.
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: 'Single status or comma-separated list. One of: draft, active, paused, completed. Unrecognized values are dropped, not rejected.'
+      tags:
+      - Campaigns
+      security:
+      - ApiKeyAuth: []
+      - oauth2: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: Page of campaigns matching the optional status filter.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Campaign id. Use for contact queue (`campaign_id`) and lookups.
+                        name:
+                          type: string
+                          description: Campaign display name.
+                        status:
+                          type: string
+                          description: 'Lifecycle status: `draft`, `active`, `paused`, `completed`, or `cancelled`. Only `active` campaigns are dialed by the scheduler.'
+              examples:
+                OK:
+                  value:
+                    results:
+                    - id: 12
+                      name: Q3 Renewals
+                      status: active
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Human-readable error message. Same shape on all public API errors.
+              examples:
+                NoWorkspace:
+                  value:
+                    detail: No workspace is connected for this application. Reconnect and select a workspace.
+                  summary: No workspace
+          description: No workspace resolved for this caller (OAuth2 app not connected to a workspace, or the API key's workspace no longer exists).
+    post:
+      operationId: createCampaign
+      description: '`name` and `widget_id` are required (400 without either). `widget_id` / `phone_number_id` that don''t belong to your workspace return 404, not a validation error.
+
+
+        **Behaviours that don''t show up in a happy-path example:**
+
+        - `max_concurrent_calls` is silently **clamped** to your workspace''s concurrency entitlement, never rejected — the value actually applied is returned in the response, which may be lower than what you sent.
+
+        - An invalid `status` silently falls back to `draft`.
+
+        - Unparseable `start_date` / `end_date` / `start_time` / `end_time` are silently ignored (left unset), not rejected.
+
+        - Leaving all schedule fields unset means the campaign can dial at any time, any day — there is no separate ''always on'' flag.
+
+        - If `phone_number_id` resolves, it also sets the agent''s default outbound number as a side effect.'
+      summary: Create a campaign
+      tags:
+      - Campaigns
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreateRequest'
+            examples:
+              BasicCampaign:
+                value:
+                  name: Q3 Renewals
+                  widget_id: 2
+                  status: draft
+                  phone_number_id: 1
+                  max_concurrent_calls: 2
+                  retry_attempts: 1
+                  retry_delay_minutes: 30
+                  timezone: America/New_York
+                  start_time: 09:00
+                  end_time: '17:00'
+                  weekdays:
+                  - mon
+                  - tue
+                  - wed
+                  - thu
+                  - fri
+                summary: Minimal dialable campaign
+                description: Uses agent id 2 (List agents → Support Agent on the local docs workspace). Change widget_id to an id from your workspace.
+              Name+AgentOnly:
+                value:
+                  name: Follow-ups
+                  widget_id: 2
+                summary: Smallest valid body
+        required: true
+      security:
+      - ApiKeyAuth: []
+      - oauth2: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaign_id:
+                    type: integer
+                    description: Id of the campaign just created.
+                  name:
+                    type: string
+                    description: Campaign name as stored (same as request `name`).
+                  status:
+                    type: string
+                    description: Status after create (`draft` if omitted/invalid in the request).
+                  max_concurrent_calls:
+                    type: integer
+                    description: Concurrency actually applied after clamping to your account entitlement.
+                required:
+                - campaign_id
+                - name
+                - status
+                - max_concurrent_calls
+              examples:
+                Created:
+                  value:
+                    campaign_id: 12
+                    name: Q3 Renewals
+                    status: draft
+                    max_concurrent_calls: 3
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Human-readable error message. Same shape on all public API errors.
+              examples:
+                MissingField:
+                  value:
+                    detail: widget_id is required.
+                  summary: Missing field
+          description: Missing name or widget_id.
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Human-readable error message. Same shape on all public API errors.
+              examples:
+                NotFound:
+                  value:
+                    detail: Agent not found.
+                  summary: Not found
+          description: widget_id or phone_number_id doesn't exist in your workspace.
+components:
+  schemas:
+    CampaignCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable campaign name. Required.
+        widget_id:
+          type: integer
+          description: Agent id from `GET /agents/` (Live agents only on that list). Required — a campaign without an agent never places a call. Must belong to your workspace (**404** if not).
+        caller_id:
+          type: string
+          description: Outbound caller ID (E.164 or provider-accepted form). If omitted and `phone_number_id` is set, defaults to that number's value.
+        phone_number_id:
+          type: integer
+          description: Id from `GET /phone-numbers/`. Sets `caller_id` from that number and also updates the linked agent's default outbound number. **404** if not in your workspace.
+        status:
+          type: string
+          description: 'One of: `draft`, `active`, `paused`, `completed`, `cancelled`. Invalid values silently fall back to `draft`. Only `active` campaigns are dialed by the scheduler.'
+        max_concurrent_calls:
+          type: integer
+          description: How many concurrent outbound calls this campaign may place. Silently **clamped** to your account entitlement (never 400). Response returns the value actually applied.
+        retry_attempts:
+          type: integer
+          default: 0
+          description: How many times to retry after the first failed/no-answer dial (non-negative). Default `0`.
+        retry_delay_minutes:
+          type: integer
+          default: 30
+          description: Minutes between retry attempts. Default `30`. Only relevant when `retry_attempts` > 0.
+        timezone:
+          type: string
+          description: IANA timezone for the dial window (e.g. `America/New_York`, `UTC`). Default `UTC` when omitted. `start_time` / `end_time` / `weekdays` are evaluated in this zone.
+        start_date:
+          type: string
+          format: date
+          description: First calendar day the campaign may dial (`YYYY-MM-DD`). Unparseable values are silently ignored (left unset).
+        end_date:
+          type: string
+          format: date
+          description: Last calendar day the campaign may dial (`YYYY-MM-DD`, inclusive). Unparseable values are silently ignored.
+        start_time:
+          type: string
+          description: Daily dial window start as `HH:MM` (24h) in `timezone`. Unparseable values ignored. Leave both times unset for all-day dialing.
+        end_time:
+          type: string
+          description: Daily dial window end as `HH:MM` (24h) in `timezone`. Unparseable values ignored.
+        weekdays:
+          type: array
+          items:
+            type: string
+          description: 'Days the campaign may dial, as lowercase abbreviations: `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`. Example: `["mon","tue","wed","thu","fri"]`. Omit for any day.'
+        excluded_dates:
+          type: array
+          items:
+            type: string
+            format: date
+          description: Calendar dates (`YYYY-MM-DD`) to skip, e.g. holidays. No calls are placed on these days even if they fall in the schedule window.
+      required:
+      - name
+      - widget_id
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: ic_live_<token>
+      description: 'Personal API key from Settings → API Keys. Code samples show `Authorization: Bearer <token>` — replace `<token>` with your key (include the word Bearer).'
+    oauth2:
+      type: oauth2
+      description: OAuth2 access token from the consent flow third-party apps go through (see /oauth/authorize/). Interchangeable with a personal API key on every operation below — both are sent as a Bearer token in the same header.
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize/
+          tokenUrl: /oauth/token/
+          scopes:
+            campaigns:read: List your call campaigns
+            campaigns:write: Create new call campaigns
+            contacts:write: Create contacts and queue calls into your campaigns
+x-snapshot-note: SNAPSHOT — do not hand-edit. Regenerate with `npm run api:sync`, which fetches /api/public/v1/schema/ from the backend. It is committed so Vercel builds are reproducible and do not depend on the backend being reachable.
