@@ -6,6 +6,9 @@ url: https://raw.githubusercontent.com/api-evangelist/icallagent-public-api/refs
 created: '2026-09-15'
 modified: '2026-09-15'
 specificationVersion: '0.21'
+x-docs-platform: vitepress
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Voice AI
 - voice ai assistant
@@ -236,6 +239,9 @@ generated:
   confidence: 95
   at: '2026-09-15T18:32:20.296Z'
 common:
+- type: CapabilityMap
+  url: capabilities/icallagent-public-api-capability-edges.yml
+  name: iCallAgent Public API Business Capability Map
 - type: MCPServer
   url: mcp/icallagent-public-api-mcp.yml
 - type: Overlay
