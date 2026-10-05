@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.icallagent.com/openapi.json",
+ "requested_url": "https://docs.icallagent.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 42905,
+ "sha256": "5f2be74a09f17f6d71e6119d3bc2a2dc34a3ef7026ffe4f3f5acdb1025a0cb25",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
