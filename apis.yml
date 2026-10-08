@@ -239,6 +239,10 @@ generated:
   confidence: 95
   at: '2026-09-15T18:32:20.296Z'
 common:
+- type: Plans
+  url: plans/icallagent-public-api-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/icallagent-public-api-rate-limits.yml
 - type: CapabilityMap
   url: capabilities/icallagent-public-api-capability-edges.yml
   name: iCallAgent Public API Business Capability Map
