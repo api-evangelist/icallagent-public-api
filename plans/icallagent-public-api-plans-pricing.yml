@@ -41,3 +41,22 @@ plans:
 notes: >-
   Pricing is genuinely usage-metered; there is a live cost calculator on the pricing page
   that computes a blended per-minute rate from the selected transport/STT/LLM/TTS models.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units: []
+  plans:
+  - name: Growth
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Custom
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
