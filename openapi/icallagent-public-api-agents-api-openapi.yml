@@ -91,3 +91,9 @@ components:
             campaigns:write: Create new call campaigns
             contacts:write: Create contacts and queue calls into your campaigns
 x-snapshot-note: SNAPSHOT — do not hand-edit. Regenerate with `npm run api:sync`, which fetches /api/public/v1/schema/ from the backend. It is committed so Vercel builds are reproducible and do not depend on the backend being reachable.
+x-provenance:
+  method: harvested
+  publisher: iCallAgent Public API
+  source: https://docs.icallagent.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
